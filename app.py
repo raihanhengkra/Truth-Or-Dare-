@@ -7,7 +7,9 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, ImageMessage, ImageSendMessage
+    MessageEvent, TextMessage, FlexSendMessage, 
+    TemplateSendMessage, ConfirmTemplate, PostbackTemplateAction, MessageTemplateAction,
+    ButtonsTemplate, URITemplateAction, TextSendMessage, CarouselTemplate, CarouselColumn, ImageSendMessage, StickerSendMessage
 )
 
 app = Flask(__name__)
@@ -30,8 +32,10 @@ def callback():
         abort(400)
     return 'OK'
 
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    msg_from_user = event.message.text
     t = {'Kalau kamu bisa jadi tidak terlihat, apa hal pertama yang akan kamu lakukan?':1, 
         'Apa rahasia yang kamu sembunyikan dari orangtuamu?':2,
         'Siapa orang yang diam-diam kamu sukai?' :3,
@@ -54,7 +58,6 @@ def handle_message(event):
         'Berapa jumlah mantanmu? sebutkan!':20,
         }
     tth = random.choice(list(t.keys()))
-
 
     d = {'Lakukan rap gaya bebas selama 3 menit!':1, 
         'Biarkan orang lain membuat status menggunakan akun sosial mediamu!':2,
@@ -79,49 +82,108 @@ def handle_message(event):
         }
     dare = random.choice(list(d.keys()))
 
-
-    g = {'https://i.pinimg.com/564x/c9/04/87/c904872af76b3e8013fb614c6f5d6853.jpg':1, 
-        'https://i.pinimg.com/564x/70/ce/46/70ce46df1f2d280c79bf4fd59dc5f9ac.jpg':2,
-        'https://i.pinimg.com/564x/85/24/99/8524995c523e066019646fc7d88b994f.jpg' :3,
-        'https://i.pinimg.com/564x/23/21/e0/2321e08e70e0ffd054c6453f1fb6f076.jpg':4,
-        'https://i.pinimg.com/564x/cc/e1/3a/cce13a149ebe97d6b8883fbcd20cb054.jpg':5,
+    
+    g = {'https://i.pinimg.com/564x/d4/d0/4c/d4d04ca608a791e769fcef88c2435d6b.jpg':1, 
+        'https://i.pinimg.com/564x/d5/00/4f/d5004fa2ded59ce5285a1eb7b9f00576.jpg':2,
+        'https://i.pinimg.com/564x/53/ac/45/53ac458033d5f840800df3cd0b2ff55e.jpg' :3,
+        'https://i.pinimg.com/564x/e4/4d/2b/e44d2b46ace72839f413ecd2505acd3d.jpg':4,
+        'https://i.pinimg.com/564x/1e/13/53/1e13536611cda462baa82113f9cadb3c.jpg':5,
+        'https://i.pinimg.com/564x/9a/b7/6a/9ab76a96e274ebf97a1b74e53ae99a70.jpg':6,
+        'https://i.pinimg.com/564x/76/10/1a/76101ab14bace1803bb37988c825e42a.jpg':7,
+        'https://i.pinimg.com/564x/fe/61/5c/fe615cf92a1c99bfce7302adc44f4379.jpg':8,
+        'https://i.pinimg.com/564x/d4/b7/3f/d4b73f7c2c470b02f1f1c3417fe616f7.jpg':9,
+        'https://i.pinimg.com/564x/80/b6/c8/80b6c83d13ad4401ae92add70c393324.jpg':10,
         }
     gambar = random.choice(list(g.keys()))
 
-
-
-    msg_from_user = event.message.text
-    if msg_from_user == 'Tes gambar':
-        line_bot_api.reply_message(
-        event.reply_token,
-        ImageSendMessage(
-            original_content_url='https://1.bp.blogspot.com/-eaDZ7sDP9uY/Xhwqlve5SUI/AAAAAAABXBo/EcI2C2vim7w2WV6EYy3ap0QLirX7RPohgCNcBGAsYHQ/s400/pose_syanikamaeru_man.png',
-            preview_image_url='https://1.bp.blogspot.com/-eaDZ7sDP9uY/Xhwqlve5SUI/AAAAAAABXBo/EcI2C2vim7w2WV6EYy3ap0QLirX7RPohgCNcBGAsYHQ/s400/pose_syanikamaeru_man.png'))
+    s = {52002734:1, 
+        52002735:2,
+        52002736:3,
+        52002737:4,
+        52002738:5,
+        52002740:6,
+        52002748:7,
+        52002745:8}
+    stiker = random.choice(list(s.keys()))
 
     if msg_from_user == 'mulai':
-        message = TextSendMessage("Disini saya akan menampilkan peraturan selama games berlangsung" +
-        "\nPertama kamu akan disuruh memilih truth atau dare, Setelah memilih kamu diharuskan melakukan perintah yang sudah diberikan." + 
-        "\nJika tidak berhasil melakukan perintah dengan benar, maka akan muncul hukuman yang harus dijalani oleh peserta " + 
-        "\n"+ "\n"
-        "Kamu Mau pilih truth atau dare?" + 
-        "\nketik 'truth' untuk memulai games truth" + 
-        "\nketik 'dare' untuk memulai games dare")
-        line_bot_api.reply_message(event.reply_token, message)
-        
-    if msg_from_user == 'truth':
-        message = TextSendMessage(tth)
+        message = TemplateSendMessage(
+    		alt_text='Carousel template',
+    		template=CarouselTemplate(
+        		columns=[
+            		CarouselColumn(
+                		thumbnail_image_url='https://i.pinimg.com/564x/0d/b8/98/0db89880dfa0595585f33ddb50da89f9.jpg',
+               			title='truth',
+                		text='Pilihlah',
+                		actions=[
+                    	    MessageTemplateAction(
+                        	    label='satu',
+                        	    text= tth
+                    		),
+                		]
+            		),
+            		CarouselColumn(
+                		thumbnail_image_url='https://i.pinimg.com/564x/c0/a1/12/c0a112ab16789fa102738ce42911a59d.jpg',
+                		title='dare',
+                		text='pilihlah',
+                		actions=[
+                    	    MessageTemplateAction(
+                        	    label='dua',
+                        	    text=dare
+                    		),
+                		]
+            		),
+                    CarouselColumn(
+                		thumbnail_image_url='https://i.pinimg.com/564x/7d/c8/e5/7dc8e50f47a0ac39a163abe6ecc511a6.jpg',
+                		title='bisa menjawab?',
+                		text='pilihlah',
+                		actions=[
+                    	    MessageTemplateAction(
+                        	    label='klik di sini',
+                        	    text='coba ceritain jika kamu memilih truth atau peragarakan langsung/videokan jika kamu memilih dare'
+                    		),
+                		]
+            		),
+                    CarouselColumn(
+                		thumbnail_image_url='https://i.pinimg.com/564x/a9/f0/40/a9f04016535daa98f06593117fb06e20.jpg',
+               			title='Hukuman',
+                		text='Pilihlah ini jika kalian tidak bisa menjawab',
+                		actions=[
+                    	    MessageTemplateAction(
+                        	    label='klik',
+                        	    text= 'hukuman'
+                    		),
+                		]
+            		),
+                    CarouselColumn(
+                		thumbnail_image_url='https://i.pinimg.com/564x/d4/3e/11/d43e11239ccdabad5e75277d2d489882.jpg',
+               			title='Ingin Lanjut?',
+                		text='hai',
+                		actions=[
+                    	    MessageTemplateAction(
+                        	    label='klik',
+                        	    text= 'Ketik "berhenti" untuk menghentikan permainan dan ketik "mulai" untuk melanjutkan permainan'
+                    		),
+                		]
+            		)
+        		]
+    		)
+		)
         line_bot_api.reply_message(event.reply_token, message)
 
-    if msg_from_user == 'dare':
-        message = TextSendMessage(dare)
-        line_bot_api.reply_message(event.reply_token, message)
-
-    if msg_from_user == 'Hukuman':
-        line_bot_api.reply_message(
-        event.reply_token,
-        ImageSendMessage(
+    if msg_from_user == 'hukuman':
+        image_message = ImageSendMessage(
             original_content_url=gambar,
-            preview_image_url='https://i.pinimg.com/236x/88/a8/ee/88a8eec5497b774af25910cd23b3f2ea.jpg'))
+            preview_image_url='https://i.pinimg.com/564x/40/1e/cf/401ecf89c1d2cbac56d26cc95c3f9fb2.jpg'
+        )
+        line_bot_api.reply_message(event.reply_token, image_message)
+    
+    if msg_from_user == 'selesai':
+        sticker_message = StickerSendMessage(
+            package_id='11537',
+            sticker_id=stiker)
+        line_bot_api.reply_message(event.reply_token, sticker_message)
+
 
 import os
 if __name__ == "__main__":
