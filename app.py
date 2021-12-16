@@ -9,7 +9,8 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, FlexSendMessage, 
     TemplateSendMessage, ConfirmTemplate, PostbackTemplateAction, MessageTemplateAction,
-    ButtonsTemplate, URITemplateAction, TextSendMessage, CarouselTemplate, CarouselColumn, ImageSendMessage, StickerSendMessage
+    ButtonsTemplate, URITemplateAction, TextSendMessage, CarouselTemplate, CarouselColumn, ImageSendMessage, StickerSendMessage,
+    ImageCarouselTemplate, ImageCarouselColumn
 )
 
 app = Flask(__name__)
@@ -108,69 +109,68 @@ def handle_message(event):
 
     if msg_from_user == 'mulai':
         message = TemplateSendMessage(
-    		alt_text='Carousel template',
-    		template=CarouselTemplate(
-        		columns=[
-            		CarouselColumn(
-                		thumbnail_image_url='https://i.pinimg.com/564x/0d/b8/98/0db89880dfa0595585f33ddb50da89f9.jpg',
-               			title='Aturan Permainan Truth or dare',
-                		text='Klik tombol dibawah untuk diarahkan ke tutorialnya',
-                		actions=[
-                    	    URITemplateAction(
-                                label='video aturan games',
-                                uri='https://youtu.be/4iP4PEncYDY'
-                            ),
-                            MessageTemplateAction(
-                                label='Gambar aturan games',
-                                text='aturan'
-                            )
-                        ]
-                    ),		
-            		CarouselColumn(
-                		thumbnail_image_url='https://i.pinimg.com/564x/c0/a1/12/c0a112ab16789fa102738ce42911a59d.jpg',
-                		title='Memulai permainan',
-                		text='Untuk memulai permainan, klik tombol dibawah ini',
-                		actions=[
-                    	    MessageTemplateAction(
-                        	    label='klik di sini',
-                        	    text='start'
-                    		),
-                		]
-            		),
-                    CarouselColumn(
-                		thumbnail_image_url='https://i.pinimg.com/564x/d4/3e/11/d43e11239ccdabad5e75277d2d489882.jpg',
-               			title='Ingin Lanjut atau berhenti?',
-                		text='',
-                		actions=[
-                    	    MessageTemplateAction(
-                        	    label='klik',
-                        	    text= 'Ketik "berhenti" untuk menghentikan permainan dan ketik "mulai" untuk melanjutkan permainan'
-                    		),
-                		]
-            		)
-        		]
-    		)
-		)
+            alt_text='Confirm template',
+            template=ConfirmTemplate(
+                text='Selamat datang di Line Chatbot games truth or dare',
+                actions=[
+                    MessageTemplateAction(
+                        label='Aturan cara bermain',
+                        text='aturan'
+                    ),
+                    MessageTemplateAction(
+                        label='Mulai gamesnya',
+                        text='start'
+                    )
+                ]
+            )
+        )   
         line_bot_api.reply_message(event.reply_token, message)
-    
-    
+
+
     if msg_from_user == 'start':
-        message = TextSendMessage( "Kamu Mau pilih truth atau dare?" + 
-        "\nketik 't' untuk memulai games truth" + 
-        "\nketik 'd' untuk memulai games dare")
+        message = TemplateSendMessage(
+            alt_text='Confirm template',
+            template=ConfirmTemplate(
+                text='Mau pilih apa?',
+                actions=[
+                    MessageTemplateAction(
+                        label='Truth',
+                        text='t'
+                    ),
+                    MessageTemplateAction(
+                        label='Dare',
+                        text='d'
+                    )
+                ]
+            )
+        )   
         line_bot_api.reply_message(event.reply_token, message)
 
-    if msg_from_user == 'aturan':
-        message = ImageSendMessage(
-        original_content_url='https://i.pinimg.com/564x/19/e9/c0/19e9c08e84ea5b4b713abc25f846b559.jpg',
-        preview_image_url='https://i.pinimg.com/564x/19/e9/c0/19e9c08e84ea5b4b713abc25f846b559.jpg')
+    if msg_from_user == 'selesai':
+        message = TemplateSendMessage(
+            alt_text='Confirm template',
+            template=ConfirmTemplate(
+                text='Mau lanjut?',
+                actions=[
+                    MessageTemplateAction(
+                        label='berhenti',
+                        text='berhenti'
+                    ),
+                    MessageTemplateAction(
+                        label='lanjut',
+                        text='mulai'
+                    )
+                ]
+            )
+        )   
         line_bot_api.reply_message(event.reply_token, message)
 
-    if msg_from_user == 'truth':
+
+    if msg_from_user == 't':
         message = TextSendMessage(tth + "\n" + "Apakah bisa menjawabnya? Ketik 'bisa' jika memang bisa dan ketik 'gabisa' jika tidak mampu melakukannya")
         line_bot_api.reply_message(event.reply_token, message)
 
-    if msg_from_user == 'dare':
+    if msg_from_user == 'd':
         message = TextSendMessage(dare + "\n" + "Apakah bisa melakukan tantangan ini? Ketik 'bisa' jika memang bisa dan ketik 'gabisa' jika tidak mampu melakukannya")
         line_bot_api.reply_message(event.reply_token, message)
 
@@ -182,6 +182,13 @@ def handle_message(event):
         image_message = ImageSendMessage(
             original_content_url=gambar,
             preview_image_url='https://i.pinimg.com/564x/40/1e/cf/401ecf89c1d2cbac56d26cc95c3f9fb2.jpg'
+        )
+        line_bot_api.reply_message(event.reply_token, image_message)
+
+    if msg_from_user == 'aturan':
+        image_message = ImageSendMessage(
+            original_content_url='https://i.pinimg.com/564x/a2/cd/eb/a2cdeb2f9f29dd0f2717f0a3d04ddecc.jpg',
+            preview_image_url='https://i.pinimg.com/564x/a2/cd/eb/a2cdeb2f9f29dd0f2717f0a3d04ddecc.jpg'
         )
         line_bot_api.reply_message(event.reply_token, image_message)
     
