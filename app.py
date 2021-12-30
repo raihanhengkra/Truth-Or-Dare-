@@ -7,16 +7,15 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, FlexSendMessage, 
-    TemplateSendMessage, ConfirmTemplate, PostbackTemplateAction, MessageTemplateAction,
-    ButtonsTemplate, URITemplateAction, TextSendMessage, CarouselTemplate, CarouselColumn, ImageSendMessage, StickerSendMessage,
-    ImageCarouselTemplate, ImageCarouselColumn
+    MessageEvent, TextMessage,  
+    TemplateSendMessage, ConfirmTemplate, MessageTemplateAction,
+    TextSendMessage, ImageSendMessage, StickerSendMessage,
 )
 
 app = Flask(__name__)
 
-ACCESS_TOKEN = 's8NNqcJqOB5Sv+8JvyFq2O3Z+ww/64BKvgpK7w2qurk373/S9KUCt0VCyl/slTMI+2iFKEvNJ+YsA3f9rewtOhJtx8DTet1mo6CNglfaHD+MneMTgXmuhhyj6qmYep7zlzTSzqQBOnbptGPi3crLrwdB04t89/1O/w1cDnyilFU='
-SECRET = '70e4863f8070c26883d318fbe67e354a'
+ACCESS_TOKEN = 'OQRq5Ec52wUzfWjBTUYoE7knj86fHUs2Abn9tazxpM36GCtfeNiOMF360bkCEhDKt7Jd1XmgKVsFb1ejMoc3nzZwFv2JYLDEW55WjahHmHMu5sbGaZbds3p1nx/HDEcfSqaRAHkTJzT7/K/KYb2QVgdB04t89/1O/w1cDnyilFU='
+SECRET = '2257f71766f9bde0b2e569ea9e699e28'
 
 line_bot_api = LineBotApi(ACCESS_TOKEN)
 handler = WebhookHandler(SECRET)
@@ -33,11 +32,7 @@ def callback():
         abort(400)
     return 'OK'
 
-
-@handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
-    msg_from_user = event.message.text
-    t = {'Kalau kamu bisa jadi tidak terlihat, apa hal pertama yang akan kamu lakukan?':1, 
+t = {'Kalau kamu bisa jadi tidak terlihat, apa hal pertama yang akan kamu lakukan?':1, 
         'Apa rahasia yang kamu sembunyikan dari orangtuamu?':2,
         'Siapa orang yang diam-diam kamu sukai?' :3,
         'Siapa orang terakhir yang kamu kepoin di media sosial?':4,
@@ -58,9 +53,9 @@ def handle_message(event):
         'Apa aib yang kamu sembunyikan dari teman-temanmu?':19,
         'Berapa jumlah mantanmu? sebutkan!':20,
         }
-    tth = random.choice(list(t.keys()))
+tth = random.choice(list(t.keys()))
 
-    d = {'Lakukan rap gaya bebas selama 3 menit!':1, 
+d = {'Lakukan rap gaya bebas selama 3 menit!':1, 
         'Biarkan orang lain membuat status menggunakan akun sosial mediamu!':2,
         'Berikan ponselmu kepada salah satu di antara kita dan biarkan orang tersebut mengirim satu pesan kepada siapapun yang dia mau!' :3,
         'Cium salah satu kaus kaki di antara temanmu!':4,
@@ -81,10 +76,10 @@ def handle_message(event):
         'Tunjukkan gerakan dance terbaikmu!':19,
         'Parodikan adegan di film India kesukaanmu!':20,
         }
-    dare = random.choice(list(d.keys()))
+dare = random.choice(list(d.keys()))
 
     
-    g = {'https://i.pinimg.com/564x/d4/d0/4c/d4d04ca608a791e769fcef88c2435d6b.jpg':1, 
+g = {'https://i.pinimg.com/564x/d4/d0/4c/d4d04ca608a791e769fcef88c2435d6b.jpg':1, 
         'https://i.pinimg.com/564x/d5/00/4f/d5004fa2ded59ce5285a1eb7b9f00576.jpg':2,
         'https://i.pinimg.com/564x/53/ac/45/53ac458033d5f840800df3cd0b2ff55e.jpg' :3,
         'https://i.pinimg.com/564x/e4/4d/2b/e44d2b46ace72839f413ecd2505acd3d.jpg':4,
@@ -95,9 +90,9 @@ def handle_message(event):
         'https://i.pinimg.com/564x/d4/b7/3f/d4b73f7c2c470b02f1f1c3417fe616f7.jpg':9,
         'https://i.pinimg.com/564x/80/b6/c8/80b6c83d13ad4401ae92add70c393324.jpg':10,
         }
-    gambar = random.choice(list(g.keys()))
+gambar = random.choice(list(g.keys()))
 
-    s = {52002734:1, 
+s = {52002734:1, 
         52002735:2,
         52002736:3,
         52002737:4,
@@ -105,29 +100,14 @@ def handle_message(event):
         52002740:6,
         52002748:7,
         52002745:8}
-    stiker = random.choice(list(s.keys()))
+stiker = random.choice(list(s.keys()))
+
+
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    msg_from_user = event.message.text
 
     if msg_from_user == 'mulai':
-        message = TemplateSendMessage(
-            alt_text='Confirm template',
-            template=ConfirmTemplate(
-                text='Selamat datang di Line Chatbot games truth or dare',
-                actions=[
-                    MessageTemplateAction(
-                        label='Aturan cara bermain',
-                        text='aturan'
-                    ),
-                    MessageTemplateAction(
-                        label='Mulai gamesnya',
-                        text='start'
-                    )
-                ]
-            )
-        )   
-        line_bot_api.reply_message(event.reply_token, message)
-
-
-    if msg_from_user == 'start':
         message = TemplateSendMessage(
             alt_text='Confirm template',
             template=ConfirmTemplate(
@@ -146,19 +126,57 @@ def handle_message(event):
         )   
         line_bot_api.reply_message(event.reply_token, message)
 
-    if msg_from_user == 'selesai':
+    if msg_from_user == 't':
         message = TemplateSendMessage(
             alt_text='Confirm template',
             template=ConfirmTemplate(
-                text='Mau lanjut?',
+                text= tth + "\n" + "\n"+ "Apakah bisa menjawabnya?",
                 actions=[
                     MessageTemplateAction(
-                        label='berhenti',
-                        text='berhenti'
+                        label='Bisa',
+                        text='bisa'
                     ),
                     MessageTemplateAction(
-                        label='lanjut',
+                        label='Gabisa',
+                        text='gabisa'
+                    )
+                ]
+            )
+        )   
+        line_bot_api.reply_message(event.reply_token, message)
+
+    if msg_from_user == 'd':
+        message = TemplateSendMessage(
+            alt_text='Confirm template',
+            template=ConfirmTemplate(
+                text= dare + "\n"+ "\n"+ "Apakah bisa melakukannya?",
+                actions=[
+                    MessageTemplateAction(
+                        label='Bisa',
+                        text='bisa'
+                    ),
+                    MessageTemplateAction(
+                        label='Gabisa',
+                        text='gabisa'
+                    )
+                ]
+            )
+        )   
+        line_bot_api.reply_message(event.reply_token, message)
+    
+    if msg_from_user == 'bisa':
+        message = TemplateSendMessage(
+            alt_text='Confirm template',
+            template=ConfirmTemplate(
+                text= "coba ceritakan jawabanmu jika kamu memilih truth atau lakukan tantangan yang diberikan jika kamu memilih dare" + "\n"+ "\n"+ "Apakah ingin lanjut?",
+                actions=[
+                    MessageTemplateAction(
+                        label='Lanjut',
                         text='mulai'
+                    ),
+                    MessageTemplateAction(
+                        label='Berhenti',
+                        text='berhenti'
                     )
                 ]
             )
@@ -166,29 +184,18 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, message)
 
 
-    if msg_from_user == 't':
-        message = TextSendMessage(tth + "\n" + "Apakah bisa menjawabnya? Ketik 'bisa' jika memang bisa dan ketik 'gabisa' jika tidak mampu melakukannya")
-        line_bot_api.reply_message(event.reply_token, message)
-
-    if msg_from_user == 'd':
-        message = TextSendMessage(dare + "\n" + "Apakah bisa melakukan tantangan ini? Ketik 'bisa' jika memang bisa dan ketik 'gabisa' jika tidak mampu melakukannya")
-        line_bot_api.reply_message(event.reply_token, message)
-
-    if msg_from_user == 'bisa':
-        message = TextSendMessage("coba ceritakan jawabanmu jika kamu memilih truth atau peragarakan langsung/videokan jika kamu memilih dare")
-        line_bot_api.reply_message(event.reply_token, message)
-
     if msg_from_user == 'gabisa':
         image_message = ImageSendMessage(
             original_content_url=gambar,
             preview_image_url='https://i.pinimg.com/564x/40/1e/cf/401ecf89c1d2cbac56d26cc95c3f9fb2.jpg'
-        )
-        line_bot_api.reply_message(event.reply_token, image_message)
+            )
+        line_bot_api.reply_message(event.reply_token, image_message) 
+
 
     if msg_from_user == 'aturan':
         image_message = ImageSendMessage(
-            original_content_url='https://i.pinimg.com/564x/a2/cd/eb/a2cdeb2f9f29dd0f2717f0a3d04ddecc.jpg',
-            preview_image_url='https://i.pinimg.com/564x/a2/cd/eb/a2cdeb2f9f29dd0f2717f0a3d04ddecc.jpg'
+            original_content_url='https://i.pinimg.com/564x/53/25/ea/5325eab320dc87fcc72754708983abd4.jpg',
+            preview_image_url='https://i.pinimg.com/564x/53/25/ea/5325eab320dc87fcc72754708983abd4.jpg'
         )
         line_bot_api.reply_message(event.reply_token, image_message)
     
@@ -197,6 +204,7 @@ def handle_message(event):
             package_id='11537',
             sticker_id=stiker)
         line_bot_api.reply_message(event.reply_token, sticker_message)
+
 
 import os
 if __name__ == "__main__":
